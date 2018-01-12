@@ -4,7 +4,7 @@
 
 FROM ubuntu:xenial
 
-MAINTAINER Nicholas Suhlman <suhlman3@gmail.com>
+MAINTAINER Steven Spinner <stevenmspin1003@gmail.com>
 
 # Configure the install script for NaviGator with CUDA
 ENV DOCKER true
@@ -26,20 +26,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 	&& apt-get -y clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -f /var/cache/apt/*.bin
-
-# Create a jenkins user for Jenkins CI and grant it passwordless sudo access
-RUN useradd --uid 10000 --create-home --shell /bin/bash jenkins \
-	&& echo "" >> /etc/sudoers \
-	&& echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# Make Jenkins the default user for the image
-USER jenkins
-WORKDIR /home/jenkins
-SHELL ["/bin/bash", "-c"]
-
-# Create a volume to access the external files from Jenkins
-RUN mkdir /home/jenkins/.jenkins
-VOLUME /home/jenkins/.jenkins
 
 # Run the install script in Docker mode (with the DOCKER environment variable)
 RUN wget https://raw.githubusercontent.com/uf-mil/installer/master/install.sh \

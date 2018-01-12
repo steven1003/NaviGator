@@ -28,7 +28,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 	&& rm -f /var/cache/apt/*.bin
 
 # Run the install script in Docker mode (with the DOCKER environment variable)
-RUN wget https://raw.githubusercontent.com/uf-mil/installer/master/install.sh \
+RUN wget https://raw.githubusercontent.com/steven1003/installer/master/install.sh \
 	&& chmod +x install.sh \
 	&& bash install.sh \
 	&& rm install.sh \

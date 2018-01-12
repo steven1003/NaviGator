@@ -9,26 +9,19 @@ stages:
 ckeckout:
   stage: checkout
   script:
-    - source ~/.mil/milrc > /dev/null 2>&1
-    - git submodule update --init --recursive
-    - ln -s $PWD $CATKIN_DIR/src/NaviGator
-    - git clone --recursive https://github.com/uf-mil/mil_common $CATKIN_DIR/src/mil_common
+  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/checkout.sh
 
 build:
   stage: build
   script:
-    - source ~/.mil/milrc > /dev/null 2>&1
-    - catkin_make -C $CATKIN_DIR -B
+  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/build.sh
 
 test:
   stage: test
   script:
-    - source ~/.mil/milrc > /dev/null 2>&1
-    - source $CATKIN_DIR/devel/setup.bash > /dev/null 2>&1
-    - catkin_make -C $CATKIN_DIR run_tests
-    - catkin_test_results $CATKIN_DIR/build/test_results --verbose
+  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/test.sh
 
 format:
   stage: format
   script:
-  - sh $CATKIN_DIR/src/NaviGator scripts/format.sh
+  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/format.sh

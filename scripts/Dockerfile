@@ -27,6 +27,17 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -f /var/cache/apt/*.bin
 
+
+# Create a gitlab user for GitLab CI and grant it passwordless sudo access
+RUN useradd --uid 10000 --create-home --shell /bin/bash gitlab \
+	&& echo "" >> /etc/sudoers \
+	&& echo "gitlab ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Make GitLab the default user for the image
+USER gitlab
+WORKDIR /home/gitlab
+SHELL ["/bin/bash", "-c"]
+
 # Run the install script in Docker mode (with the DOCKER environment variable)
 RUN wget https://raw.githubusercontent.com/steven1003/installer/master/install.sh \
 	&& chmod +x install.sh \

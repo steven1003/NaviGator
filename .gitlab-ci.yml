@@ -9,19 +9,19 @@ stages:
 ckeckout:
   stage: checkout
   script:
-  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/checkout.sh
+  - sh $CATKIN_DIR/src/NaviGator/scripts/CI/checkout.sh
 
 build:
   stage: build
   script:
-  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/build.sh
+  - sh $CATKIN_DIR/src/NaviGator/scripts/CI/build.sh
 
 test:
   stage: test
   script:
-  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/test.sh
+  - sh $CATKIN_DIR/src/NaviGator/scripts/CI/test.sh
 
 format:
   stage: format
   script:
-  - docker run navigator sh $CATKIN_DIR/src/NaviGator/scripts/CI/format.sh
+  - sh $CATKIN_DIR/src/NaviGator/scripts/CI/format.sh

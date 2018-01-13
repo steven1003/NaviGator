@@ -1,34 +1,42 @@
 image: navigator:latest
 
 stages:
-  - checkout
   - build
   - test
   - format
-
-ckeckout:
-  stage: checkout
-  script:
-    - source ~/.mil/milrc > /dev/null 2>&1
-    - git submodule update --init --recursive
-    - ln -s $PWD $CATKIN_DIR/src/NaviGator
-    - git clone --recursive https://github.com/uf-mil/mil_common $CATKIN_DIR/src/mil_common
 
 build:
   stage: build
   script:
     - source ~/.mil/milrc > /dev/null 2>&1
+    - git submodule update --init --recursive
+    - ln -s $PWD $CATKIN_DIR/src/NaviGator
+    - git clone --recursive https://github.com/uf-mil/mil_common $CATKIN_DIR/src/mil_common
     - catkin_make -C $CATKIN_DIR -B
+    - tar -czf build.tar.gz $CATKIN_DIR/devel/ $CATKIN_DIR/build
+  artifacts:
+    expire_in: '2 hours'
+    paths:
+      - build.tar.gz
 
 test:
   stage: test
   script:
     - source ~/.mil/milrc > /dev/null 2>&1
+    - tar -xzf build.tar.gz -C / > /dev/null 2>&1
     - source $CATKIN_DIR/devel/setup.bash > /dev/null 2>&1
     - catkin_make -C $CATKIN_DIR run_tests
     - catkin_test_results $CATKIN_DIR/build/test_results --verbose
+  artifacts:
+    expire_in: '2 hours'
+    paths:
+      - build.tar.gz
 
 format:
   stage: format
   script:
-  - sh $CATKIN_DIR/src/NaviGator/scripts/CI/format.sh
+    - source ~/.mil/milrc > /dev/null 2>&1
+    - git submodule update --init --recursive
+    - ln -s $PWD $CATKIN_DIR/src/NaviGator
+    - bash $CATKIN_DIR/src/NaviGator/scripts/CI/formatPython.sh
+    - bash $CATKIN_DIR/src/NaviGator/scripts/CI/format.sh
